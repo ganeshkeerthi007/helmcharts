@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "project1.fullname" . }}
+  
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.lables }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.lables }}
+    spec:
+      containers:
+      - name: {{ .Values.cname }}
+        image: {{ .Values.image }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        env:
+        - name: TITLE
+          value: "NGINX APP1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}  
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.port }}
+  selector:
+    app: {{ .Values.lables }}
+
